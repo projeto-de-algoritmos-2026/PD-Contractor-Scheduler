@@ -1,0 +1,50 @@
+[
+  {
+    "nome": "Pintura da sala",
+    "duracao": 2,
+    "inicio_janela": 0,
+    "fim_janela": 5,
+    "valor": 50,
+    "_obs": "Compatível com Elétrica e Limpeza"
+  },
+  {
+    "nome": "Encanamento",
+    "duracao": 3,
+    "inicio_janela": 1,
+    "fim_janela": 7,
+    "valor": 70,
+    "_obs": "Bloqueia Pintura e Elétrica se escolhido"
+  },
+  {
+    "nome": "Elétrica",
+    "duracao": 2,
+    "inicio_janela": 4,
+    "fim_janela": 9,
+    "valor": 30,
+    "_obs": "Só cabe depois da Pintura"
+  },
+  {
+    "nome": "Reforma geral",
+    "duracao": 4,
+    "inicio_janela": 0,
+    "fim_janela": 10,
+    "valor": 100,
+    "_obs": "CASO NÃO-GULOSO: alto valor mas bloqueia vários outros"
+  },
+  {
+    "nome": "Jardinagem",
+    "duracao": 2,
+    "inicio_janela": 6,
+    "fim_janela": 10,
+    "valor": 40,
+    "_obs": "Compatível com Reforma geral"
+  },
+  {
+    "nome": "Limpeza pós-obra",
+    "duracao": 1,
+    "inicio_janela": 9,
+    "fim_janela": 12,
+    "valor": 20,
+    "_obs": "Encaixa no final do dia"
+  }
+]
