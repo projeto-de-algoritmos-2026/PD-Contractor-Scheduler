@@ -9,6 +9,13 @@ Conteúdo da Disciplina: PD (Programação Dinâmica)<br>
 | 21/1029512  |  Laís Cecília Soares Paes |
 | 22/1008697  |  Sunamita Vitória Rodrigues dos Santos |
 
+## Nota ao prof / monitores
+
+Ambos os integrantes participaram, porém houve um problema com os commits da Sunamita, que não estão atrelados ao seu github
+
+<img width="1290" height="177" alt="image" src="https://github.com/user-attachments/assets/47d59abb-89a6-484d-b1ca-30bf2f9910bb" />
+
+
 ## Sobre
 Aplicação do algoritmo **Weighted Interval Scheduling**(modificado) com Programação Dinâmica.
 
