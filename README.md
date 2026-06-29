@@ -28,8 +28,8 @@ Framework: nenhum (apenas biblioteca padrão)<br>
 
 Clone o repositório e entre na pasta:
 ```bash
-git clone https://github.com/projeto-de-algoritmos-2026/PD-G37.git
-cd PD-G37
+git clone https://github.com/projeto-de-algoritmos-2026/PD-Contractor-Scheduler
+cd PD-Contractor-Scheduler
 ```
 
 Instale as dependências:
@@ -47,10 +47,6 @@ Rodar com arquivo JSON próprio:
 ```bash
 python main.py [exemplo.json]
 ```
-Rodar a inteface gráfica:
-```bash
-python gui.py
-```
 
 O arquivo JSON deve seguir o formato:
 ```json
@@ -66,5 +62,24 @@ O arquivo JSON deve seguir o formato:
 ]
 ```
 
+Rodar a inteface gráfica:
+```bash
+python gui.py
+```
+
 ## Outros
 O projeto inclui uma suíte de testes (`tests.py`) cobrindo casos como lista vazia, trabalhos incompatíveis, empates de valor e o caso clássico onde a solução gulosa por valor falha.
+
+Para rodar os testes:
+
+- Instale a framework de testes pytest:
+
+```bash
+pip install pytest
+```
+
+- Execute os testes
+
+```bash
+python tests.py
+```
