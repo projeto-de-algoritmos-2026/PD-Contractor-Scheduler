@@ -121,7 +121,7 @@ class RefinedGraphApp:
                             whis= 100,
                             patch_artist=True,
                             medianprops={"color": "white", "linewidth": 0},
-                            boxprops={"facecolor": "C" + str(i), "edgecolor": "white",
+                            boxprops={"facecolor": "C" + str(i if i < 3 else i+1), "edgecolor": "white",
                                     "linewidth": 0},
                             widths=width,
                             orientation='horizontal')
