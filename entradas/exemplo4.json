@@ -1,0 +1,27 @@
+[
+  {"nome": "Serviço Manhã", 
+   "duracao": 2, 
+   "inicio_janela": 0, 
+   "fim_janela": 3, 
+   "valor": 35},
+
+  {"nome": "Serviço Tarde",    
+   "duracao": 2, 
+   "inicio_janela": 3, 
+   "fim_janela": 6, 
+   "valor": 35},
+
+
+  {"nome": "Serviço Noite",    
+   "duracao": 2, 
+   "inicio_janela": 6, 
+   "fim_janela": 9, 
+   "valor": 35},
+
+
+  {"nome": "Reforma completa", 
+   "duracao": 7, 
+   "inicio_janela": 0, 
+   "fim_janela": 9, 
+   "valor": 90}
+]
