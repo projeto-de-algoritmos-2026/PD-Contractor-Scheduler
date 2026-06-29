@@ -9,6 +9,13 @@ Conteúdo da Disciplina: PD (Programação Dinâmica)<br>
 | 21/1029512  |  Laís Cecília Soares Paes |
 | 22/1008697  |  Sunamita Vitória Rodrigues dos Santos |
 
+## Nota ao prof / monitores
+
+Ambos os integrantes participaram, porém houve um problema com os commits da Sunamita, que não estão atrelados ao seu github
+
+<img width="1290" height="177" alt="image" src="https://github.com/user-attachments/assets/47d59abb-89a6-484d-b1ca-30bf2f9910bb" />
+
+
 ## Sobre
 Aplicação do algoritmo **Weighted Interval Scheduling**(modificado) com Programação Dinâmica.
 
@@ -24,12 +31,12 @@ _Adicione screenshots após rodar o projeto._
 
 ## Instalação
 Linguagem: Python 3.10+<br>
-Framework: nenhum (apenas biblioteca padrão)<br>
+Framework: Tkinter(somente GUI)<br>
 
 Clone o repositório e entre na pasta:
 ```bash
-git clone https://github.com/projeto-de-algoritmos-2026/PD-G37.git
-cd PD-G37
+git clone https://github.com/projeto-de-algoritmos-2026/PD-Contractor-Scheduler
+cd PD-Contractor-Scheduler
 ```
 
 Instale as dependências:
@@ -47,10 +54,6 @@ Rodar com arquivo JSON próprio:
 ```bash
 python main.py [exemplo.json]
 ```
-Rodar a inteface gráfica:
-```bash
-python gui.py
-```
 
 O arquivo JSON deve seguir o formato:
 ```json
@@ -66,5 +69,24 @@ O arquivo JSON deve seguir o formato:
 ]
 ```
 
+Rodar a inteface gráfica:
+```bash
+python gui.py
+```
+
 ## Outros
 O projeto inclui uma suíte de testes (`tests.py`) cobrindo casos como lista vazia, trabalhos incompatíveis, empates de valor e o caso clássico onde a solução gulosa por valor falha.
+
+Para rodar os testes:
+
+- Instale a framework de testes pytest:
+
+```bash
+pip install pytest
+```
+
+- Execute os testes
+
+```bash
+python tests.py
+```
