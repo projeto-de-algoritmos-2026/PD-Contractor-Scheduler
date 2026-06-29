@@ -1,4 +1,4 @@
-# Weighted Interval Scheduling
+# Contractor Scheduler
 
 Número da Lista: 37<br>
 Conteúdo da Disciplina: PD (Programação Dinâmica)<br>
@@ -10,13 +10,12 @@ Conteúdo da Disciplina: PD (Programação Dinâmica)<br>
 | 22/1008697  |  Sunamita Vitória Rodrigues dos Santos |
 
 ## Sobre
-Aplicação do algoritmo **Weighted Interval Scheduling** com Programação Dinâmica.
+Aplicação do algoritmo **Weighted Interval Scheduling**(modificado) com Programação Dinâmica.
 
 O problema consiste em um empreiteiro que possui uma lista de serviços, cada um com uma janela de tempo disponível (horário em que o cliente está em casa), uma duração e um valor. O objetivo é selecionar quais serviços realizar para **maximizar o valor total**, respeitando que dois serviços não podem ser executados ao mesmo tempo.
 
 A solução utiliza:
 - Ordenação dos trabalhos por fim da janela
-- Pré-cômputo do último trabalho compatível via **busca binária** (O(n log n))
 - **DP recursiva com memoização** para calcular o valor ótimo
 - Reconstrução da solução com `find_solution`
 
@@ -33,15 +32,24 @@ git clone https://github.com/projeto-de-algoritmos-2026/PD-G37.git
 cd PD-G37
 ```
 
+Instale as dependências:
+```bash
+pip install -r requirements.txt
+```
+
 ## Uso
-Rodar com exemplos embutidos:
+Rodar com exemplo embutido:
 ```bash
 python main.py
 ```
 
 Rodar com arquivo JSON próprio:
 ```bash
-python main.py exemplos.json
+python main.py [exemplo.json]
+```
+Rodar a inteface gráfica:
+```bash
+python gui.py
 ```
 
 O arquivo JSON deve seguir o formato:
@@ -53,7 +61,8 @@ O arquivo JSON deve seguir o formato:
     "inicio_janela": 0,
     "fim_janela": 5,
     "valor": 50
-  }
+  },
+  ...
 ]
 ```
 
