@@ -27,7 +27,19 @@ A solução utiliza:
 - Reconstrução da solução com `find_solution`
 
 ## Screenshots
-_Adicione screenshots após rodar o projeto._
+
+CLI no terminal:
+<img width="933" height="501" alt="image" src="https://github.com/user-attachments/assets/ae6c7dbb-6f1c-4746-a0f2-59618e611ece" />
+
+GUI vazia:
+<img width="1432" height="958" alt="Screenshot_20260629_184848" src="https://github.com/user-attachments/assets/97541b97-2d0c-4a55-956e-e0a655679b6a" />
+
+GUI com exemplos:
+
+<img width="1505" height="958" alt="Screenshot_20260629_184759" src="https://github.com/user-attachments/assets/944ebb23-6fa6-4d55-9b67-34aa733b1aaa" />
+
+<img width="1505" height="958" alt="Screenshot_20260629_184823" src="https://github.com/user-attachments/assets/0b9ca85d-44e3-484e-9001-b68e72119fd3" />
+
 
 ## Instalação
 Linguagem: Python 3.10+<br>
