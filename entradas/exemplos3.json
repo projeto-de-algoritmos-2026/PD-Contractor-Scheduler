@@ -1,0 +1,58 @@
+[
+  {
+    "nome": "trab0",
+    "duracao": 2,
+    "inicio_janela": 1,
+    "fim_janela": 3,
+    "valor": 15
+  },
+  {
+    "nome": "trab1",
+    "duracao": 3,
+    "inicio_janela": 1,
+    "fim_janela": 5,
+    "valor": 25
+  },
+  {
+    "nome": "trab2",
+    "duracao": 2,
+    "inicio_janela": 4,
+    "fim_janela": 6,
+    "valor": 30
+  },
+  {
+    "nome": "trab3",
+    "duracao": 4,
+    "inicio_janela": 2,
+    "fim_janela": 6,
+    "valor": 90
+  },
+  {
+    "nome": "trab4",
+    "duracao": 1,
+    "inicio_janela": 1,
+    "fim_janela": 8,
+    "valor": 8
+  },
+  {
+    "nome": "trab5",
+    "duracao": 3,
+    "inicio_janela": 6,
+    "fim_janela": 10,
+    "valor": 35
+  },
+  {
+    "nome": "trab6",
+    "duracao": 5,
+    "inicio_janela": 1,
+    "fim_janela": 10,
+    "valor": 100
+  },
+  {
+    "nome": "trab7",
+    "duracao": 1,
+    "inicio_janela": 1,
+    "fim_janela": 12,
+    "valor": 10
+  }
+]

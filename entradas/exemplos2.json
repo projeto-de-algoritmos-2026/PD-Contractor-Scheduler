@@ -1,0 +1,51 @@
+[
+  {
+    "nome": "Dona Maria",
+    "duracao": 2,
+    "inicio_janela": 6,
+    "fim_janela": 9,
+    "valor": 120
+  },
+  {
+    "nome": "Seu João",
+    "duracao": 1,
+    "inicio_janela": 6,
+    "fim_janela": 9,
+    "valor": 50
+  },
+  {
+    "nome": "Dona Marta",
+    "duracao": 4,
+    "inicio_janela": 8,
+    "fim_janela": 12,
+    "valor": 20
+  },
+  {
+    "nome": "Seu Alfredo",
+    "duracao": 3,
+    "inicio_janela": 10,
+    "fim_janela": 15,
+    "valor": 95
+  },
+  {
+    "nome": "Zequinha",
+    "duracao": 1,
+    "inicio_janela": 12,
+    "fim_janela": 14,
+    "valor": 80
+  },
+  {
+    "nome": "Almeida",
+    "duracao": 6,
+    "inicio_janela": 14,
+    "fim_janela": 22,
+    "valor": 300
+  },
+  {
+    "nome": "Mercadão",
+    "duracao": 3,
+    "inicio_janela": 14,
+    "fim_janela": 18,
+    "valor": 140
+  }
+]

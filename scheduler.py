@@ -1,4 +1,3 @@
-import bisect
 from typing import Optional
 from trabalho import Trabalho
 
@@ -10,12 +9,13 @@ from trabalho import Trabalho
 class Resultado:
     """Encapsula tudo que o algoritmo produz."""
 
-    def __init__(self, valor_maximo: float, escolhidos: list[Trabalho],
-                 todos: list[Trabalho], log: list[str]):
+    def __init__(self, valor_maximo, escolhidos: list[Trabalho],
+                 todos: list[Trabalho], tempos_de_inicio, log: Logger):
         self.valor_maximo = valor_maximo
         self.escolhidos = escolhidos
         self.todos = todos          # lista ordenada por fim_janela
-        self.log = log
+        self.tempos_de_inicio = tempos_de_inicio
+        self.log = log.log
 
     def to_dict(self) -> dict:
         return {
@@ -29,9 +29,9 @@ class Resultado:
         print(f"  Valor máximo obtido : {self.valor_maximo}")
         print(f"  Trabalhos escolhidos: {len(self.escolhidos)}")
         print("="*55)
-        for t in self.escolhidos:
+        for i, t in enumerate(self.escolhidos):
             print(f"  ✔ {t.nome:20s}  janela [{t.inicio_janela}, {t.fim_janela}]"
-                  f"  dur={t.duracao}  val={t.valor}")
+                  f"  dur={t.duracao}  val={t.valor}  inicio={self.tempos_de_inicio[self.todos.index(t)]}")
         print("="*55)
 
     def imprimir_log(self):
@@ -48,33 +48,37 @@ class Resultado:
         """
         if not self.todos:
             return
+        
 
         escolhidos_nomes = {t.nome for t in self.escolhidos}
-        max_fim = max(t.fim_janela for t in self.todos)
+        max_fim = self.todos[-1].fim_janela
         largura = int(max_fim / escala) + 1
 
         print("\n--- TIMELINE ---")
-        print("Legenda: [===] janela disponível | [###] duração alocada | ✔ escolhido\n")
+        print("Legenda: [---] janela disponível | [###] duração alocada | ✔ escolhido\n")
 
         # Cabeçalho de tempo
-        header = "".join(str(i * escala).ljust(5) for i in range(largura // 5 + 1))
+        header = "".join(f'{i * escala * 5:<5.2f}' for i in range(largura // 5 + 1))
         print(f"{'':22s}{header}")
         print(f"{'':22s}" + "|    " * (largura // 5 + 1))
 
-        for t in self.todos:
+        for i, t in enumerate(self.todos):
             marcador = "✔" if t.nome in escolhidos_nomes else " "
             linha = [" "] * largura
 
             # Janela disponível
             ini = int(t.inicio_janela / escala)
             fim = int(t.fim_janela / escala)
-            for i in range(ini, fim):
-                linha[i] = "-"
+            for j in range(ini, fim):
+                linha[j] = "-"
 
-            # Bloco de duração (começa no início da janela)
-            dur = int(t.duracao / escala)
-            for i in range(ini, min(ini + dur, largura)):
-                linha[i] = "#"
+            if t in self.escolhidos:
+                # Bloco de duração
+                dur = int(t.duracao / escala)
+                ini = int(self.tempos_de_inicio[i] / escala)
+                fim = ini + dur
+                for j in range(ini, min(fim, largura)):
+                    linha[j] = "#"
 
             print(f"{marcador} {t.nome:20s}|{''.join(linha)}")
 
@@ -85,105 +89,134 @@ class Resultado:
 # Algoritmo principal
 # ---------------------------------------------------------------------------
 
-def _ultimo_compativel_binario(deadlines: list[float], fim_anterior: float) -> int:
+def _ultimo_compativel(ordenadas: list[Trabalho], inicio_anterior: float) -> int:
     """
-    Busca binária: retorna o maior índice j tal que
-    deadlines[j] (= inicio_j + duracao_j, i.e., quando j termina)
-    seja <= fim_anterior.
+    retorna o maior índice j em ordenadas tal que ordenadas[j] pode ser concuido até o tempo inicio_anterior
+    ou seja <= ordenadas[j].inicio_janela + ordenadas[j].duracao <= inicio_anterior
 
-    Complexidade: O(log n)
+    Complexidade: O(n)
     """
-    # deadlines aqui guarda o "fim real" de cada trabalho ordenado
-    idx = bisect.bisect_right(deadlines, fim_anterior) - 1
-    return idx  # -1 se nenhum compatível
+
+    for j in range(len(ordenadas) -1, -1, -1):
+        if ordenadas[j].inicio_janela + ordenadas[j].duracao <= inicio_anterior:
+            return j
+
+    return -1  # -1 se nenhum compatível
 
 
-def weighted_interval_scheduling(trabalhos: list[Trabalho]) -> Resultado:
+
+class Logger:
+    def __init__(self):
+        self.log = []
+    
+    def logInfo(self, string : str, quiet: bool = False) -> None:
+        self.log.append(string)
+        if not quiet:
+            print(string)
+
+def weighted_interval_scheduling(trabalhos: list[Trabalho], log_realtime: bool = True) -> Resultado:
     """
-    Weighted Interval Scheduling via Programação Dinâmica com memoização.
+    Weighted Interval Scheduling(modificado) via Programação Dinâmica com memoização.
 
     Complexidade:
         - Ordenação       : O(n log n)
-        - Pré-cômputo p[] : O(n log n)  ← busca binária
-        - DP recursiva    : O(n)
+        - DP recursiva    : O(n^2)
+          - Encontrar o último trabalho compatível  : O(n)
         - Reconstrução    : O(n)
-        Total             : O(n log n)
+        Total             : O(n^2)
 
     Retorna um objeto Resultado com valor ótimo, trabalhos escolhidos e log.
     """
-    log: list[str] = []
+    log: Logger = Logger()
 
     # --- Caso vazio ---
     if not trabalhos:
-        log.append("Lista de trabalhos vazia. Nada a agendar.")
-        return Resultado(0.0, [], [], log)
+        log.logInfo("Lista de trabalhos vazia. Nada a agendar.")
+        return Resultado(0.0, [], [], [], log)
 
     # --- Ordenação por fim_janela ---
     ordenados = sorted(trabalhos, key=lambda t: t.fim_janela)
     n = len(ordenados)
-    log.append(f"Total de trabalhos recebidos: {n}")
-    log.append("Ordenados por fim_janela:")
+    log.logInfo(f"Total de trabalhos recebidos: {n}")
+    log.logInfo("Ordenados por fim_janela:")
     for i, t in enumerate(ordenados):
-        log.append(f"  [{i}] {t.nome}: janela=[{t.inicio_janela},{t.fim_janela}] "
-                   f"dur={t.duracao} val={t.valor} deadline={t.deadline}")
+        log.logInfo(f"  [{i}] {t.nome}:\n"
+                    f"      janela=[{t.inicio_janela},{t.fim_janela}] \n"
+                    f"      dur={t.duracao}\n"
+                    f"      val={t.valor}\n"
+                    f"      deadline={t.deadline}")
 
-    # --- Pré-cômputo de p[i]: último compatível com i ---
+
     # "fim real" de cada trabalho j = inicio_janela[j] + duracao[j]
-    # trabalho j é compatível com i se j termina <= inicio de i
-    fins_reais = [t.inicio_janela + t.duracao for t in ordenados]
-
-    p: list[int] = []
-    log.append("\nPré-cômputo de p[i] (último compatível via busca binária):")
-    for i in range(n):
-        # trabalho i começa no mais cedo em inicio_janela[i]
-        idx = _ultimo_compativel_binario(fins_reais, ordenados[i].inicio_janela)
-        # garante que não aponta pra si mesmo
-        if idx >= i:
-            idx = i - 1
-        p.append(idx)
-        compat_nome = ordenados[idx].nome if idx >= 0 else "nenhum"
-        log.append(f"  p[{i}] ({ordenados[i].nome}) = {idx} ({compat_nome})")
+    fins_reais = [t.fim_janela - t.duracao for t in ordenados]
 
     # --- DP com memoização ---
     memo: list[Optional[float]] = [None] * n
 
     def find_opt(i: int) -> float:
+        return _find_opt(i, i, 0)
+    def _find_opt(i: int, trab_max_i: int, tempo_comprometido_max: int) -> float:
         if i < 0:
             return 0.0
         if memo[i] is not None:
             return memo[i]
+        if i == trab_max_i:
+            tempo_comprometido_max = ordenados[i].fim_janela
 
-        val_pega    = ordenados[i].valor + find_opt(p[i])
-        val_nao_pega = find_opt(i - 1)
+        tempo_inicia_trabalho = min(tempo_comprometido_max - ordenados[i].duracao, fins_reais[i])
+
+        ultimo_compativel = _ultimo_compativel(ordenados[:i], tempo_inicia_trabalho)
+
+        log.logInfo(
+            f'  find_opt({i}):\n'
+            f'      compromisso = {tempo_comprometido_max}\n'
+            f'      inicio = {tempo_inicia_trabalho}\n'
+            f'      {ultimo_compativel = }'
+        )
+
+
+        val_pega    = ordenados[i].valor + _find_opt(ultimo_compativel, trab_max_i, tempo_inicia_trabalho)
+        val_nao_pega = _find_opt(i - 1, trab_max_i, tempo_comprometido_max)
+
 
         memo[i] = max(val_pega, val_nao_pega)
-        log.append(f"  OPT({i}={ordenados[i].nome}): "
-                   f"pega={val_pega:.2f} | não_pega={val_nao_pega:.2f} "
-                   f"→ memo={memo[i]:.2f}")
+
+        log.logInfo(f"  OPT({i}={ordenados[i].nome}):\n"
+                   f"       pega={val_pega:.2f}\n"
+                   f"       não_pega={val_nao_pega:.2f}\n"
+                   f"       {"PEGA" if val_pega > val_nao_pega else "NÃO PEGA"}")
         return memo[i]
 
-    log.append("\nComputando OPT (memoização):")
+    log.logInfo("\nComputando OPT (memorização):")
     find_opt(n - 1)
 
     # --- Reconstrução da solução ---
-    def find_solution(i: int) -> list[Trabalho]:
+    start: list[Optional[float]] = [None] * n
+    def find_solution(i: int):
+        return _find_solution(i, ordenados[-1].fim_janela)
+    def _find_solution(i: int, tempo_comprometido_max: int) -> list[Trabalho]:
         if i < 0:
             return []
-        val_pega = ordenados[i].valor + (memo[p[i]] if p[i] >= 0 else 0.0)
-        val_nao_pega = memo[i - 1] if i > 0 else 0.0
+        
+        tempo_inicia_trabalho = min(tempo_comprometido_max - ordenados[i].duracao, fins_reais[i])
+        ultimo_compativel = _ultimo_compativel(ordenados[:i], tempo_inicia_trabalho)
 
-        if val_pega >= val_nao_pega:
-            log.append(f"  find_solution({i}={ordenados[i].nome}): ESCOLHIDO")
-            return find_solution(p[i]) + [ordenados[i]]
+        val_pega = ordenados[i].valor + (memo[ultimo_compativel] if ultimo_compativel >= 0 else 0)
+        val_nao_pega = memo[i-1] if  i-1 > 0 else 0
+
+        # print(f'{i=} - {val_pega=} - {val_nao_pega=}')
+
+        if val_pega > val_nao_pega:
+            log.logInfo(f"  [{i}] - {ordenados[i].nome}")
+            start[i] = tempo_inicia_trabalho
+            return _find_solution(ultimo_compativel, tempo_inicia_trabalho) + [ordenados[i]]
         else:
-            log.append(f"  find_solution({i}={ordenados[i].nome}): pulado")
-            return find_solution(i - 1)
+            return _find_solution(i-1, tempo_comprometido_max)
 
-    log.append("\nReconstruindo solução:")
+    log.logInfo("\nReconstruindo solução:")
     escolhidos = find_solution(n - 1)
     valor_maximo = memo[n - 1]
 
-    log.append(f"\nValor máximo: {valor_maximo}")
-    log.append(f"Trabalhos escolhidos: {[t.nome for t in escolhidos]}")
+    log.logInfo(f"\nValor alcançado: {valor_maximo}")
 
-    return Resultado(valor_maximo, escolhidos, ordenados, log)
+    return Resultado(valor_maximo, escolhidos, ordenados, start, log)

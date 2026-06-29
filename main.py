@@ -49,7 +49,6 @@ def agendar(trabalhos: list[Trabalho], verbose: bool = True):
     if verbose:
         resultado.imprimir_resumo()
         resultado.imprimir_timeline()
-        resultado.imprimir_log()
 
     return resultado
 
