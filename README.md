@@ -2,6 +2,7 @@
 
 Número da Lista: 37<br>
 Conteúdo da Disciplina: PD (Programação Dinâmica)<br>
+Apresentação: [https://youtu.be/GEoPmyxTK2k](https://youtu.be/GEoPmyxTK2k)
 
 ## Alunos
 | Matrícula | Aluno |
