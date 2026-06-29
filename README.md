@@ -45,17 +45,37 @@ pip install -r requirements.txt
 ```
 
 ## Uso
-Rodar com exemplo embutido:
+### CLI
+
+<ul>
+  
+<li> Rodar com exemplo embutido:
 ```bash
 python main.py
 ```
 
-Rodar com arquivo JSON próprio:
+<li> Rodar com arquivo JSON próprio:
 ```bash
 python main.py [exemplo.json]
 ```
 
-O arquivo JSON deve seguir o formato:
+<li>Opções:
+<ul>
+<code>python main.py [arquivo] [-q/--quiet] [-s/--scale NUM]</code>
+<li> arquivo: o arquivo JSON de entrada
+<li> <b>-q</b>/<b>--quiet</b>: não mostra a execução passo-a-passo, somente o resultado
+<li> <b>-s</b>/<b>--scale</b>: valor numérico (float ou int) de escala horizontal para a timeline
+<li> exemplos:
+  <ul>
+  <li>  <code>python main.py --scale 2 --quiet</code>: exemplo embutido, sem passo-a-passo e com escala horizontal 2
+  <li>  <code>python main.py entradas/exemplos3.json -s 2.5</code>: arquivo de exemplo, com passo-a-passo e com escala horizontal 2.5
+  <li>  <code>python main.py ~/caminho/ao/meu_arquivo.json -q</code>: arquivo próprio, sem passo-a-passo e com escala horizontal 1
+  <li>  <code>python main.py -qs5 ~caminho/ao/meu/arquivo.json</code>: arquivo próprio, sem passo-a-passo e com escala horizontal 5
+  </ul>
+</ul>
+</ul>
+
+O arquivo JSON de entrada deve seguir o formato a seguir, em que cada objeto `{...}` é um trabalho:
 ```json
 [
   {
@@ -68,10 +88,27 @@ O arquivo JSON deve seguir o formato:
   ...
 ]
 ```
-
-Rodar a inteface gráfica:
+### GUI
+1. Inicialize a inteface gráfica:
 ```bash
 python gui.py
+```
+2. Clique em "Carregar arquivo" e selecione uma entrada válida
+
+<img width="1130" height="958" alt="image" src="https://github.com/user-attachments/assets/33ba97ca-809f-4527-a481-c31bbdf97463" />
+
+O arquivo JSON de entrada deve seguir o formato a seguir, em que cada objeto `{...}` é um trabalho:
+```json
+[
+  {
+    "nome": "Pintura da sala",
+    "duracao": 2,
+    "inicio_janela": 0,
+    "fim_janela": 5,
+    "valor": 50
+  },
+  ...
+]
 ```
 
 ## Outros
