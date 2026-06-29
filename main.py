@@ -34,7 +34,7 @@ def carregar_de_json(caminho: str) -> list[Trabalho]:
     return trabalhos
 
 
-def agendar(trabalhos: list[Trabalho], verbose: bool = True):
+def agendar(trabalhos: list[Trabalho], scale, quiet, verbose: bool = True):
     """
     Ponto de entrada principal.
     Retorna o objeto Resultado — o frontend pode chamar essa função
@@ -44,11 +44,11 @@ def agendar(trabalhos: list[Trabalho], verbose: bool = True):
         print("Nenhum trabalho válido para agendar.")
         return None
 
-    resultado = weighted_interval_scheduling(trabalhos)
+    resultado = weighted_interval_scheduling(trabalhos, not quiet)
 
     if verbose:
         resultado.imprimir_resumo()
-        resultado.imprimir_timeline()
+        resultado.imprimir_timeline(scale)
 
     return resultado
 
@@ -84,16 +84,88 @@ def carregar_exemplos() -> list[dict]:
     """
     return [dict(d) for d in EXEMPLO]  # retorna cópias para não modificar o original
 
+class IllegalArgumentError(ValueError):
+    pass
+
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        # Lê de arquivo JSON passado como argumento
-        caminho = sys.argv[1]
-        print(f"Lendo trabalhos de: {caminho}")
+    scale = 1.0
+    caminho = ''
+    quiet = False
+
+    argc = len(sys.argv)
+    # if argc > 1:
+    i = 1
+    while i < argc:
+        if sys.argv[i].startswith('--'):
+            match sys.argv[i]:
+                case '--scale':
+                    try:
+                        scale = float(sys.argv[i+1])
+                    except ValueError, IndexError:
+                        print(f'Could not get value of option --scale')
+                        raise
+                    i += 1
+                case '--quiet':
+                    quiet = True
+                case _:
+                    raise IllegalArgumentError(f'Unknown option or flag: {sys.argv[i]}')
+        elif sys.argv[i].startswith('-'):
+            c = 1
+            while c < len(sys.argv[i]):
+                match sys.argv[i][c]:
+                    case 'q':
+                        quiet = True
+                    case 's':
+                        if c + 1 == len(sys.argv[i]):
+                            try:
+                                scale = float(sys.argv[i+1])
+                            except ValueError, IndexError:
+                                print(f'Could not get value of option -s')
+                                raise
+                            i += 1
+                            break
+                        else:
+                            try:
+                                scale = float(sys.argv[i][c+1:])
+                            except ValueError:
+                                print(f'Could not get attached value of option -s ({sys.argv[i][c+1:]})')
+                                raise
+                            break
+                    case _:
+                        raise IllegalArgumentError(f'Unknown option or flag: -{sys.argv[i][c]}')
+
+                c += 1
+        else:
+            caminho = sys.argv[i]
+        i += 1
+
+
+    # #     # Lê de arquivo JSON passado como argumento
+    # #     caminho = sys.argv[1]
+    # #     print(f"Lendo trabalhos de: {caminho}")
+    # #     if argc > 2:
+    # #         try:
+    # #             scale = float(sys.argv[2])
+    # #         except TypeError:
+    # #             print("Valor inválido para escala, deve ser float")
+    # #             raise
+    # #     trabalhos = carregar_de_json(caminho)
+    # else:
+    #     # Usa exemplo embutido, com escala 1
+    #     print("Usando exemplo embutido. Para usar seus dados: python main.py dados.json\n")
+    #     trabalhos = []
+    #     for d in EXEMPLO:
+    #         try:
+    #             trabalhos.append(Trabalho.de_dict(d))
+    #         except ValueError as e:
+    #             print(f"⚠ {e}")
+
+    trabalhos: list[Trabalho]
+
+    if caminho:
         trabalhos = carregar_de_json(caminho)
     else:
-        # Usa exemplo embutido
-        print("Usando exemplo embutido. Para usar seus dados: python main.py dados.json\n")
         trabalhos = []
         for d in EXEMPLO:
             try:
@@ -101,4 +173,4 @@ if __name__ == "__main__":
             except ValueError as e:
                 print(f"⚠ {e}")
 
-    agendar(trabalhos, verbose=True)
+    agendar(trabalhos, 1 / scale, quiet, verbose=True)

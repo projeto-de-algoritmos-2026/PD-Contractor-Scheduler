@@ -39,7 +39,7 @@ class Resultado:
         for linha in self.log:
             print(linha)
 
-    def imprimir_timeline(self, escala: int = 1):
+    def imprimir_timeline(self, escala: float = 1):
         """
         Imprime uma timeline ASCII mostrando todos os trabalhos e
         marcando com ✔ os que foram escolhidos.
@@ -58,7 +58,7 @@ class Resultado:
         print("Legenda: [---] janela disponível | [###] duração alocada | ✔ escolhido\n")
 
         # Cabeçalho de tempo
-        header = "".join(f'{i * escala * 5:<5.2f}' for i in range(largura // 5 + 1))
+        header = "".join(f'{i * escala * 5:<5.1f}' for i in range(largura // 5 + 1))
         print(f"{'':22s}{header}")
         print(f"{'':22s}" + "|    " * (largura // 5 + 1))
 
@@ -106,12 +106,13 @@ def _ultimo_compativel(ordenadas: list[Trabalho], inicio_anterior: float) -> int
 
 
 class Logger:
-    def __init__(self):
+    def __init__(self, active):
+        self.active = active
         self.log = []
     
-    def logInfo(self, string : str, quiet: bool = False) -> None:
+    def logInfo(self, string : str) -> None:
         self.log.append(string)
-        if not quiet:
+        if self.active:
             print(string)
 
 def weighted_interval_scheduling(trabalhos: list[Trabalho], log_realtime: bool = True) -> Resultado:
@@ -127,7 +128,7 @@ def weighted_interval_scheduling(trabalhos: list[Trabalho], log_realtime: bool =
 
     Retorna um objeto Resultado com valor ótimo, trabalhos escolhidos e log.
     """
-    log: Logger = Logger()
+    log: Logger = Logger(log_realtime)
 
     # --- Caso vazio ---
     if not trabalhos:

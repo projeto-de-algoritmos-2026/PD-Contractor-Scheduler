@@ -35,7 +35,7 @@ class RefinedGraphApp:
 
         tk.Label(self.ctrl_frame, text="Log de Análise", font=("Segoe UI", 10), bg="white").pack(pady=(20, 5))
         self.log_area = scrolledtext.ScrolledText(self.ctrl_frame, height=25, font=("Consolas", 9))
-        self.log_area.pack(padx=10, pady=5, fill=tk.BOTH)
+        self.log_area.pack(padx=10, pady=(5,30), fill=tk.BOTH, expand=True)
         self.log_area.insert(tk.END, "Aguardando arquivo...\n")
 
        
