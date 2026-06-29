@@ -24,7 +24,7 @@ _Adicione screenshots após rodar o projeto._
 
 ## Instalação
 Linguagem: Python 3.10+<br>
-Framework: nenhum (apenas biblioteca padrão)<br>
+Framework: Tkinter(somente GUI)<br>
 
 Clone o repositório e entre na pasta:
 ```bash
